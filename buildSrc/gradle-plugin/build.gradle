@@ -1,0 +1,43 @@
+// TODO! change version
+project.version = '1.0.2'
+// TODO! change group?
+project.group = 'de.db.vz'
+
+// TODO can we use sonar?
+apply plugin: 'maven'
+apply plugin: 'groovy'
+apply plugin: 'java-gradle-plugin'
+apply plugin: 'jacoco'
+
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+
+dependencies {
+    testCompile('org.spockframework:spock-core:1.0-groovy-2.4') {
+        exclude module: 'groovy-all'
+    }
+}
+
+jar {
+    baseName = 'msintplugin'
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives sourcesJar
+}
+
+gradlePlugin {
+    plugins {
+        simplePlugin {
+            id = 'de.db.vz.msintplugin'
+            implementationClass = 'de.db.vz.integrationtestplugin.IntegrationTestPlugin'
+        }
+    }
+}

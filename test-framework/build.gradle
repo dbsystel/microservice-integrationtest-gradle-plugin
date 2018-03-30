@@ -1,0 +1,52 @@
+project.version = '1.0.4'
+// TODO! change group to de.db...?
+// TODO! find a fitting group + name combo, eg: de.db.vz.msintplugin.
+// ..msintplugin (gradle plugin)
+// ..msintframework (lib)
+project.group = 'de.db.vz'
+
+apply plugin: 'groovy'
+// TODO can we publish on the official gradle plugins repo?
+apply plugin: 'jacoco'
+apply plugin: 'de.db.vz.msintplugin'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+dependencies {
+    compile 'junit:junit:4.12'
+    compile 'org.springframework.amqp:spring-rabbit:1.7.0.RELEASE'
+    compile 'org.skyscreamer:jsonassert:1.2.3'
+    compile 'ch.qos.logback:logback-classic:1.2.3'
+    compile 'org.assertj:assertj-core:3.5.2'
+
+    compile 'org.codehaus.groovy:groovy-all:2.4.10'
+    compile 'org.codehaus.groovy.modules.http-builder:http-builder:0.7'
+    compile 'org.spockframework:spock-core:1.1-groovy-2.4'
+    compile 'org.mock-server:mockserver-client-java:3.10.2'
+    compile 'com.github.docker-java:docker-java:3.0.14'
+
+    integrationTestCompile sourceSets.main.compileClasspath
+    integrationTestCompile sourceSets.main.output
+}
+
+jar {
+    baseName = 'msintframework'
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives sourcesJar
+}
+
+msintplugin {
+    // todo replace by image on docker hub
+    testRunnerImage = 'de.db.vz/msintrunner:ant-junit'
+    startUpTimeoutInSeconds = 20
+}
+
+build.dependsOn integrationTest

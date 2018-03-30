@@ -1,0 +1,21 @@
+# gradle
+**/.gradle
+**/build
+**/.build
+.gradle
+build
+.build
+
+# intellij
+**/.idea
+**/*.iml
+**/out
+
+# eclipse
+bin
+.settings
+.project
+.classpath
+
+# msintplugin
+**/.compose-project
