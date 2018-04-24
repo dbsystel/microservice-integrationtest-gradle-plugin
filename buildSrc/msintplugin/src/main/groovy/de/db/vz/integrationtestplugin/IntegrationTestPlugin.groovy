@@ -54,6 +54,7 @@ class IntegrationTestPlugin implements Plugin<Project> {
         def configurations = project.configurations
         configurations.create('integrationTestCompile')
         configurations.create('integrationTestRuntime')
+        configurations.create('integrationTestRunner')
         configurations['integrationTestRuntime'].extendsFrom configurations['integrationTestCompile']
     }
 

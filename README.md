@@ -13,9 +13,6 @@ The core artifact found under `buildSrc/msintplugin`. A gradle plugin encapsulat
 ### Test Framework
 Performs integration tests on the gradle plugin and provides some helpful groovy classes like the `ServiceUriResolver`. An artifact is built which can be used in your integration tests.
 
-### Test Runner
-Sample docker images which work in sync with the gradle plugin as test runner containers.
-
 ## Usage
 See test-framework for a sample integration of the plugin.
 

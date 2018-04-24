@@ -23,6 +23,7 @@ dependencies {
 
     integrationTestCompile sourceSets.main.compileClasspath
     integrationTestCompile sourceSets.main.output
+    integrationTestRunner "org.junit.platform:junit-platform-console-standalone:1.1.1"
 }
 
 jar {
@@ -39,7 +40,8 @@ artifacts {
 }
 
 msintplugin {
-    testRunnerImage = 'msintrunner:ant-junit'
+    testRunnerImage = 'openjdk:8-jdk-alpine'
+    useJUnitPlatformConsoleRunner()
     startUpTimeoutInSeconds = 20
 }
 
