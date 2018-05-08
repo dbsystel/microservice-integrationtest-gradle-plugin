@@ -1,6 +1,19 @@
+buildscript {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath "com.gradle.publish:plugin-publish-plugin:0.9.10"
+    }
+}
+
+
 project.version = '1.0.0'
 project.group = 'de.db.vz'
 
+apply plugin: 'com.gradle.plugin-publish'
 apply plugin: 'maven'
 apply plugin: 'groovy'
 apply plugin: 'java-gradle-plugin'
@@ -35,6 +48,20 @@ gradlePlugin {
         simplePlugin {
             id = 'de.db.vz.msintplugin'
             implementationClass = 'de.db.vz.integrationtestplugin.IntegrationTestPlugin'
+        }
+    }
+}
+
+pluginBundle {
+    website = 'http://www.gradle.org/'
+    vcsUrl = 'https://github.com/dbsystel/microservice-integrationtest-gradle-plugin'
+    description = 'Gradle Plugin to execute microservice integration tests with docker'
+    tags = ['integration-testing', 'microservice', 'docker', 'groovy']
+
+    plugins {
+        simplePlugin {
+            id = 'de.db.vz.msintplugin'
+            displayName = 'Microservice Integrationtest Plugin'
         }
     }
 }

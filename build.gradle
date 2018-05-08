@@ -8,12 +8,12 @@ allprojects {
     buildscript {
         repositories {
             mavenLocal()
-            mavenCentral()
+            jcenter()
         }
     }
 
     repositories {
         mavenLocal()
-        mavenCentral()
+        jcenter()
     }
 }
