@@ -44,8 +44,7 @@ artifacts {
 }
 
 msintplugin {
-    // todo replace by image on docker hub
-    testRunnerImage = 'de.db.vz/msintrunner:ant-junit'
+    testRunnerImage = 'xellsys/msintrunner:ant-junit'
     startUpTimeoutInSeconds = 20
 }
 
