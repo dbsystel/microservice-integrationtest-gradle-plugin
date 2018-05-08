@@ -15,4 +15,6 @@ cache:
 before_install:
  - chmod +x gradlew
 
+before_script: docker build test-runner/ant-junit/ -t msintrunner:ant-junit
+
 script: ./gradlew clean build

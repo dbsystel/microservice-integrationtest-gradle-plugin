@@ -44,7 +44,7 @@ artifacts {
 }
 
 msintplugin {
-    testRunnerImage = 'xellsys/msintrunner:ant-junit'
+    testRunnerImage = 'msintrunner:ant-junit'
     startUpTimeoutInSeconds = 20
 }
 
