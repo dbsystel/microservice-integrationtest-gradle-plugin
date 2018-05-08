@@ -8,10 +8,10 @@ Use this plugin to test the integration of your docker micro services.
 ## Components
 
 ### Gradle Plugin
-The core artifact found under `buildSrc/gradle-plugin`. A gradle plugin encapsulating service integration test setup and tear down.
+The core artifact found under `buildSrc/msintplugin`. A gradle plugin encapsulating service integration test setup and tear down.
 
 ### Test Framework
-Performs integration tests on the gradle-plugin and provides some helpful groovy classes like the `ServiceUriResolver`. An artifact is built which can be used in your integration tests.
+Performs integration tests on the gradle plugin and provides some helpful groovy classes like the `ServiceUriResolver`. An artifact is built which can be used in your integration tests.
 
 ### Test Runner
 Sample docker images which work in sync with the gradle plugin as test runner containers.

@@ -9,7 +9,7 @@ subprojects {
     // sadly we need this hack to properly access the plugin in a multi project build.
     // in addition we have to surround it in a try catch as publishing a buildSrc project from root is not
     // officially supported by gradle. As a work aorund we run a seperate gradle maven publish build against
-    // the buildSrc/gradle-plugin/build.gradle directly. in that context the runtime call below fails, hence
+    // the buildSrc/msintplugin/build.gradle directly. in that context the runtime call below fails, hence
     // we catch that fail.
     rootProject.dependencies {
         try {

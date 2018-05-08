@@ -53,7 +53,7 @@ gradlePlugin {
 }
 
 pluginBundle {
-    website = 'http://www.gradle.org/'
+    website = 'https://github.com/dbsystel/microservice-integrationtest-gradle-plugin'
     vcsUrl = 'https://github.com/dbsystel/microservice-integrationtest-gradle-plugin'
     description = 'Gradle Plugin to execute microservice integration tests with docker'
     tags = ['integration-testing', 'microservice', 'docker', 'groovy']
