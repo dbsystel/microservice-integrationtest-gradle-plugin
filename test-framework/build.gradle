@@ -1,12 +1,7 @@
-project.version = '1.0.4'
-// TODO! change group to de.db...?
-// TODO! find a fitting group + name combo, eg: de.db.vz.msintplugin.
-// ..msintplugin (gradle plugin)
-// ..msintframework (lib)
+project.version = '1.0.0'
 project.group = 'de.db.vz'
 
 apply plugin: 'groovy'
-// TODO can we publish on the official gradle plugins repo?
 apply plugin: 'jacoco'
 apply plugin: 'de.db.vz.msintplugin'
 

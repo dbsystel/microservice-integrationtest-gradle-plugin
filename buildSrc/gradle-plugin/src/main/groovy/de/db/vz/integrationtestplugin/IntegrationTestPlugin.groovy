@@ -64,7 +64,7 @@ class IntegrationTestPlugin implements Plugin<Project> {
         sourceSet.runtimeClasspath = sourceSet.output + sourceSet.compileClasspath
 
         sourceSet.resources.srcDirs = ['src/integrationTest/resources']
-        // TODO find a generic solutio for all JVM languages
+        // TODO find a generic solution for all JVM languages
         sourceSet.java.srcDirs = ['src/integrationTest/java']
         def groovySourceSet = new DslObject(sourceSet).convention.findPlugin GroovySourceSet
         groovySourceSet?.groovy?.srcDirs = ['src/integrationTest/groovy']
