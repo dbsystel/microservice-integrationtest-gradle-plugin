@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/dbsystel/microservice-integrationtest-gradle-plugin.svg?branch=develop)](https://travis-ci.org/dbsystel/microservice-integrationtest-gradle-plugin)
+
 Microservice Integrationtest Gradle Plugin
 ==========================================
 
