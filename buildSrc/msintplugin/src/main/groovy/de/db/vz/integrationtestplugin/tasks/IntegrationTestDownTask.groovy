@@ -37,7 +37,8 @@ class IntegrationTestDownTask extends DefaultTask {
                 project.logger.info testrunnerLog.text
             }
             String htmlreport = "${project.buildDir.absolutePath}/test-results/index.html"
-            if (!isSuccessfull(new File(project.buildDir, 'test-results'))) {
+            if (!isSuccessfull(new File(project.buildDir, 'test-results/integrationTest'))) {
+                // TODO generate html report
                 throw new GradleException("There are failed test cases! See ${htmlreport} for details")
             } else {
                 project.logger.lifecycle "See test result in $htmlreport"
