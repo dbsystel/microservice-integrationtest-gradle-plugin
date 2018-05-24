@@ -28,9 +28,14 @@ class IntegrationTestTask extends DefaultTask {
 
             project.logger.lifecycle 'executing test cases'
             project.logger.lifecycle '...'
+
+            def testResultsDir = new File(project.buildDir, 'test-results/integrationTest')
+            testResultsDir.mkdirs()
+
             TestRunner testRunner = new TestRunner(
-                    jar.archivePath, runnerDir,
-                    new File(project.buildDir, 'test-results/integrationTest'),
+                    jar.archivePath,
+                    runnerDir,
+                    testResultsDir,
                     dockerLogsDir,
                     dockerCompose.network())
             copyFiles(runnerDir)

@@ -36,20 +36,17 @@ class IntegrationTestDownTask extends DefaultTask {
             if (testrunnerLog.exists()) {
                 project.logger.info testrunnerLog.text
             }
-            String htmlreport = "${project.buildDir.absolutePath}/test-results/index.html"
-            if (!isSuccessfull(new File(project.buildDir, 'test-results/integrationTest'))) {
-                // TODO generate html report
-                throw new GradleException("There are failed test cases! See ${htmlreport} for details")
-            } else {
-                project.logger.lifecycle "See test result in $htmlreport"
+
+            def testResultDir = new File(project.buildDir, 'test-results/integrationTest')
+            if (!testResultDir.exists()) {
+                project.logger.warn "\nNo test-results found in ${testResultDir.path}"
+            } else if (!isSuccessfull(testResultDir)) {
+                throw new GradleException("There are failed test cases!")
             }
         }
     }
 
     static boolean isSuccessfull(File testResultDir) {
-        if (!testResultDir.exists())
-            return true
-
         JunitXmlParser parser = []
 
         parser.isSuccessful(testResultDir)
