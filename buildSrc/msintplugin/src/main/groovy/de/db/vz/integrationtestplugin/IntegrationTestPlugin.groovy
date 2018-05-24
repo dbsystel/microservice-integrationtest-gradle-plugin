@@ -84,10 +84,8 @@ class IntegrationTestPlugin implements Plugin<Project> {
         def integrationTestJarTask = createJarTask(project)
 
         def integrationTestUpTask = project.tasks.create('integrationTestUp', IntegrationTestUpTask.class)
-        def processResources = project.tasks.processResources
-        // this might have some unforeseen negative side effects
-        processResources.mustRunAfter integrationTestUpTask
 
+        def processResources = project.tasks.processResources
         def integrationTestTask = project.tasks.create('integrationTest', IntegrationTestTask.class)
         integrationTestTask.dependsOn processResources
         integrationTestTask.dependsOn integrationTestJarTask, integrationTestUpTask

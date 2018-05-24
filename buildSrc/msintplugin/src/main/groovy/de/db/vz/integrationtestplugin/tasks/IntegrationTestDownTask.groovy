@@ -46,6 +46,9 @@ class IntegrationTestDownTask extends DefaultTask {
     }
 
     static boolean isSuccessfull(File testResultDir) {
+        if (!testResultDir.exists())
+            return true
+
         JunitXmlParser parser = []
 
         parser.isSuccessful(testResultDir)
