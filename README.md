@@ -5,6 +5,10 @@ Microservice Integrationtest Gradle Plugin
 
 Use this plugin to test the integration of your docker micro services. 
 
+## Distribution
+
+We release the plugin artifact to https://plugins.gradle.org/plugin/de.db.vz.msintplugin
+
 ## Components
 
 ### Gradle Plugin
