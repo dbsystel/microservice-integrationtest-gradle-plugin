@@ -51,6 +51,9 @@ To debug your services while running integration tests, you have to start them u
 ### Docker
 Your services are defined as a regular docker compose file in `src/integrationTest/docker/docker-compose.yml`.
 
+### Test runner
+You need to configure an image with a corresponding run command in which your tests are be executed. For a java example see the configuration in test-framework/build.gradle:42
+
 #### Health checks 
 Health checks can be configured via environment variables for each service individually providing the port and path (ports will not have to be published as the health check is performed in the compose network), like this
 ```

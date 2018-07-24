@@ -4,6 +4,7 @@ import de.db.vz.integrationtestplugin.IntegrationTestPlugin
 import de.db.vz.integrationtestplugin.docker.DockerCompose
 import de.db.vz.integrationtestplugin.testrunner.TestRunner
 import org.gradle.api.DefaultTask
+import org.gradle.api.GradleException
 import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.bundling.Jar
 
@@ -14,6 +15,8 @@ class IntegrationTestTask extends DefaultTask {
 
     IntegrationTestTask() {
         doFirst {
+            validateTestRunnerConfig()
+
             def dockerCompose = new DockerCompose(IntegrationTestPlugin.composeFile,
                     IntegrationTestPlugin.composeProjectFile.readLines()[0])
             project.logger.lifecycle "loaded project: ${dockerCompose.composeProject}"
@@ -79,6 +82,15 @@ class IntegrationTestTask extends DefaultTask {
                 exclude '**/*.jar'
             }
             into(target.absolutePath)
+        }
+    }
+
+    static void validateTestRunnerConfig() {
+        if (!IntegrationTestPlugin.integrationTestExtension.testRunnerImage) {
+            throw new GradleException("testRunnerImage not configured")
+        }
+        if (!IntegrationTestPlugin.integrationTestExtension.testRunnerCommand) {
+            throw new GradleException("testRunnerCommand not configured")
         }
     }
 }
