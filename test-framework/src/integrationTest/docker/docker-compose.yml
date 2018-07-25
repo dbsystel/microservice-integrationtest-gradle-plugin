@@ -1,7 +1,9 @@
-version: '2'
+version: '3'
 services:
   #misc
   rabbitmq:
+    environment:
+      VERSION: '0.1'
     ports:
     - 5671
     - 5672
@@ -11,14 +13,20 @@ services:
   http:
     environment:
       SERVICE_CHECK_HTTP: ':80/'
+    labels:
+      Version: '1.2'
     image: nginx
 
   fireandforget:
     build: ./fireandforget
+    labels:
+      version: '2.3'
     environment:
       SERVICE_CHECK_EXIT: 'true'
 
   mockservice:
+    labels:
+      VERSION: '3.4'
     ports:
     - 8080
     - 8090

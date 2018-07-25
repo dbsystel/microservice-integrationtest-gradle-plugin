@@ -1,5 +1,6 @@
 package de.db.vz.integrationtestplugin.service.healthcheck
 
+import de.db.vz.integrationtestplugin.docker.Docker
 import de.db.vz.integrationtestplugin.docker.DockerException
 import groovy.json.JsonSlurper
 
@@ -11,6 +12,7 @@ abstract class HealthCheck {
     protected final def env
     protected Status status
     protected String error
+    protected final String serviceVersion
 
     // TODO implicitly go through health check precedence instead of relying on configuration
 
@@ -33,8 +35,19 @@ abstract class HealthCheck {
         this.containerId = containerId
         this.network = network
         this.env = env
+        this.serviceVersion = resolveServiceVersion()
     }
 
+    String resolveServiceVersion() {
+        resolveFromLabel() ?: env.VERSION
+    }
+
+    String resolveFromLabel() {
+        def docker = new Docker(this.containerId)
+        ['version', 'VERSION', 'Version'].findResult {
+            docker.inspect("{{ index .Config.Labels \"$it\" }}") ?: null
+        }
+    }
 
     Status execute() {
         if (inFinalState()) {
@@ -73,6 +86,10 @@ abstract class HealthCheck {
 
     String status() {
         status.toString()
+    }
+
+    String serviceVersion() {
+        serviceVersion
     }
 
     protected boolean inFinalState() {

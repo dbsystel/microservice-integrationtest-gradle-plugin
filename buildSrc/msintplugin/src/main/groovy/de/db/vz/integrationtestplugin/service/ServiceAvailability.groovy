@@ -63,7 +63,7 @@ class ServiceAvailability {
 
             healthChecks.each {
                 it.execute()
-                logger.lifecycle "${it.service()}...".padRight(50, '.') + it.status()
+                logger.lifecycle getStatusMessage(it)
             }
             logger.lifecycle('...')
 
@@ -73,6 +73,16 @@ class ServiceAvailability {
             Thread.sleep(1000)
         }
         allHealthChecksOk
+    }
+
+    private static String getStatusMessage(HealthCheck healthCheck) {
+        String statusMessage = "${healthCheck.service()}...".padRight(50, '.')
+
+        if (healthCheck.serviceVersion() == null) {
+            return statusMessage + healthCheck.status()
+        } else {
+            return statusMessage + healthCheck.status().padRight(15, '.') + healthCheck.serviceVersion()
+        }
     }
 
     private static boolean timeoutIsExceeded(def startTime, def timeout) {
