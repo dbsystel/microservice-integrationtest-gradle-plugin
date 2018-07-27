@@ -32,7 +32,7 @@ class TestRunner {
                 callDocker('cp', file.absolutePath, containerId + ':/')
             }
             callDocker('cp', testsArchive.absolutePath, containerId + ':/')
-            callDocker(true, 'start', '-ai', containerId)
+            callDocker(true, 'start', '-a', containerId)
             callDocker('cp', containerId + ':/reports/.', resultDir.absolutePath)
         } finally {
             try {
@@ -51,17 +51,20 @@ class TestRunner {
         process.waitFor()
     }
 
-    private InputStream callDocker(boolean ignoreExitCode = false, String... cmd) {
+    private StringBuffer callDocker(boolean ignoreExitCode = false, String... cmd) {
         def builder = new ProcessBuilder(['docker'] + Arrays.asList(cmd))
 
         Process process = builder.start()
+        def out = new StringBuffer()
+        def err = new StringBuffer()
+        process.consumeProcessOutput(out, err)
         def exitCode = process.waitFor()
 
         if (!ignoreExitCode && exitCode != 0) {
-            def error = process.getErrorStream().readLines()
+            def error = err.readLines()
             throw new DockerException('error executing test runner: ' + error.join(System.lineSeparator()))
         }
 
-        return process.getInputStream()
+        return out
     }
 }
