@@ -1,8 +1,13 @@
 package de.db.vz.integrationtestplugin.service.healthcheck
 
+import org.gradle.api.logging.Logger
+import org.gradle.api.logging.Logging
+
 class HttpHealthCheck extends HealthCheck {
 
     protected final String healthEndpoint
+    static Logger logger = Logging.getLogger(HttpHealthCheck.class)
+
 
     protected HttpHealthCheck(String service, String containerId, String network, String healthEndpoint, def env) {
         super(service, containerId, network, env)
@@ -20,6 +25,7 @@ class HttpHealthCheck extends HealthCheck {
                 'appropriate/curl',
                 '-s', '-o', '/dev/null', '-w', '%{http_code}',
                 "http://${service}${healthEndpoint}")
+        logger.debug("health check docker command: ${builder.command()}")
         Process process = builder.start()
         process.waitFor()
 

@@ -10,7 +10,7 @@ buildscript {
 }
 
 
-project.version = '1.1.4'
+project.version = '1.1.5'
 project.group = 'de.db.vz'
 
 apply plugin: 'com.gradle.plugin-publish'

@@ -1,17 +1,17 @@
 package de.db.vz.integrationtestplugin.docker
 
+import de.db.vz.integrationtestplugin.IntegrationTestPlugin
 import org.gradle.api.logging.Logger
 import org.gradle.api.logging.Logging
 
 import java.security.SecureRandom
+import java.util.concurrent.TimeUnit
 
 class DockerCompose {
 
-    // REVIEW BH: why not RandomStringUtils?
-    // eg: RandomStringUtils.random(8, ('a'..'z').join().toCharArray())
     String composeProject
     File composeFile
-    static Logger logger = Logging.getLogger(DockerCompose.class)
+    private static Logger logger = Logging.getLogger(DockerCompose.class)
 
 
     DockerCompose(File composeFile, String composeProject = randomString(8)) {
@@ -72,6 +72,7 @@ class DockerCompose {
             // so we use docker logs instead
             def containerId = containerId(it)
             def builder = new ProcessBuilder('docker', 'logs', containerId)
+            logger.debug("running docker command: ${builder.command()}")
             builder.redirectOutput(new File(dir, "${it}.log"))
             Process process = builder.start()
             process.waitFor()
@@ -80,7 +81,8 @@ class DockerCompose {
 
     private def callDockerCompose(String... cmd) {
         Process process = createDockerComposeProcess(cmd)
-        def exitCode = process.waitFor()
+        process.waitFor(IntegrationTestPlugin.integrationTestExtension.dockerCommandTimeoutInSeconds, TimeUnit.SECONDS)
+        def exitCode = process.exitValue()
 
         def error = process.err.readLines()
         if (exitCode != 0) {
@@ -106,7 +108,7 @@ class DockerCompose {
         def builder = new ProcessBuilder(baseCmd + cmd.toList())
         builder.directory(composeFile.parentFile.absoluteFile)
         builder.redirectInput()
-        logger.info builder.command().join(' ')
+        logger.debug("running docker compose command: ${builder.command()}")
         Process process = builder.start()
         process
     }

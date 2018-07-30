@@ -30,6 +30,7 @@ class IntegrationTestDownTask extends DefaultTask {
             project.logger.lifecycle 'stopping integration test environment'
             project.logger.lifecycle 'removing service containers and network'
             dockerCompose.down()
+            project.logger.debug("Deleting compose project file: ${IntegrationTestPlugin.composeProjectFile.path}")
             IntegrationTestPlugin.composeProjectFile.delete()
 
             def testrunnerLog = new File(dockerLogsDir, 'testrunner.log')

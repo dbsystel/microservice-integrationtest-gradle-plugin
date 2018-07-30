@@ -5,6 +5,8 @@ import de.db.vz.integrationtestplugin.docker.DockerException
 import org.gradle.api.logging.Logger
 import org.gradle.api.logging.Logging
 
+import java.util.concurrent.TimeUnit
+
 class TestRunner {
 
     private final File testsArchive
@@ -54,15 +56,19 @@ class TestRunner {
     private StringBuffer callDocker(boolean ignoreExitCode = false, String... cmd) {
         def builder = new ProcessBuilder(['docker'] + Arrays.asList(cmd))
 
+        logger.debug("calling docker with command: ${builder.command()}")
+
         Process process = builder.start()
         def out = new StringBuffer()
         def err = new StringBuffer()
         process.consumeProcessOutput(out, err)
-        def exitCode = process.waitFor()
+        process.waitFor(IntegrationTestPlugin.integrationTestExtension.dockerCommandTimeoutInSeconds, TimeUnit.SECONDS)
+        def exitCode = process.exitValue()
 
         if (!ignoreExitCode && exitCode != 0) {
-            def error = err.readLines()
-            throw new DockerException('error executing test runner: ' + error.join(System.lineSeparator()))
+            logger.info out.readLines().join('\n')
+            logger.error err.readLines().join('\n')
+            throw new DockerException("test runner terminated with exitCode $exitCode")
         }
 
         return out
