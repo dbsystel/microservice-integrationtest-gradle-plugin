@@ -16,7 +16,12 @@ class HttpHealthCheck extends HealthCheck {
 
     @Override
     protected Status performHealthCheck() {
-        if (hasContainerExited()) {
+        if (!validHealthEndpoint(healthEndpoint)) {
+            logger.error "Malformed healthEndpoint: $healthEndpoint should match :<port></path (optional)>, eg: :8080/health"
+            status = Status.FAILED
+            return status
+        } else if (hasContainerExited()) {
+            logger.error "Container $containerId exited unexpectedly"
             status = Status.FAILED
             return status
         }
@@ -34,6 +39,10 @@ class HttpHealthCheck extends HealthCheck {
         // it could be argued that PENDING is not specific enough.
         // in the future we might consider evaluating a more elaborate state at this point.
         status = httpResponseOk(healthStatus) ? Status.OK : Status.PENDING
+    }
+
+    static boolean validHealthEndpoint(String healthEndpoint) {
+        healthEndpoint ==~ /:\d{2,5}(\/.*)?/
     }
 
     private static boolean httpResponseOk(String healthStatus) {
