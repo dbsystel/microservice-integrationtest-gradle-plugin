@@ -1,5 +1,6 @@
 package de.db.vz.integrationtestplugin.service.healthcheck
 
+import de.db.vz.integrationtestplugin.IntegrationTestPlugin
 import org.gradle.api.logging.Logger
 import org.gradle.api.logging.Logging
 
@@ -16,18 +17,19 @@ class HttpHealthCheck extends HealthCheck {
 
     @Override
     protected Status performHealthCheck() {
-        if (!validHealthEndpoint(healthEndpoint)) {
+        if (!IntegrationTestPlugin.integrationTestExtension.curlImage) {
+            logger.error "Configure a non empty curl image!"
+            return fail()
+        } else if (!validHealthEndpoint(healthEndpoint)) {
             logger.error "Malformed healthEndpoint: $healthEndpoint should match :<port></path (optional)>, eg: :8080/health"
-            status = Status.FAILED
-            return status
+            return fail()
         } else if (hasContainerExited()) {
             logger.error "Container $containerId exited unexpectedly"
-            status = Status.FAILED
-            return status
+            return fail()
         }
 
         def builder = new ProcessBuilder('docker', 'run', '--rm', "--net=$network",
-                'appropriate/curl',
+                IntegrationTestPlugin.integrationTestExtension.curlImage,
                 '-s', '-o', '/dev/null', '-w', '%{http_code}',
                 "http://${service}${healthEndpoint}")
         logger.debug("health check docker command: ${builder.command()}")
@@ -39,6 +41,11 @@ class HttpHealthCheck extends HealthCheck {
         // it could be argued that PENDING is not specific enough.
         // in the future we might consider evaluating a more elaborate state at this point.
         status = httpResponseOk(healthStatus) ? Status.OK : Status.PENDING
+    }
+
+    private Status fail() {
+        status = Status.FAILED
+        return status
     }
 
     static boolean validHealthEndpoint(String healthEndpoint) {
