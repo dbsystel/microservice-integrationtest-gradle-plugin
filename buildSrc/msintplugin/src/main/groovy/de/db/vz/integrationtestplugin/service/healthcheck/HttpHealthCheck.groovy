@@ -30,7 +30,7 @@ class HttpHealthCheck extends HealthCheck {
 
         def builder = new ProcessBuilder('docker', 'run', '--rm', "--net=$network",
                 IntegrationTestPlugin.integrationTestExtension.curlImage,
-                '-s', '-o', '/dev/null', '-w', '%{http_code}',
+                '-sw','\'%{http_code}\n\'', '-o', '/dev/null',
                 "http://${service}${healthEndpoint}")
         logger.debug("health check docker command: ${builder.command()}")
         Process process = builder.start()
