@@ -10,6 +10,8 @@ class ServiceAvailability {
     private Project project
     private Logger logger
     private DockerCompose dockerCompose
+    private long startTime
+    private boolean availabilityHasBeenLoggedOnce = false
 
 
     ServiceAvailability(DockerCompose dockerCompose, Project project) {
@@ -27,7 +29,7 @@ class ServiceAvailability {
             HealthCheck.from(it, dockerCompose.containerId(it), dockerCompose.network())
         }
 
-        def startTime = System.currentTimeMillis()
+        startTime = System.currentTimeMillis()
 
         boolean allHealthChecksOk = waitForHealthChecks(startTime, startupTimeout, healthChecks)
 
@@ -61,11 +63,15 @@ class ServiceAvailability {
                 !someHealthChecksFailed &&
                 !timeoutIsExceeded(startTime, startupTimeoutInSeconds * 1000)) {
 
+            StringBuilder strb = new StringBuilder()
+
             healthChecks.each {
                 it.execute()
-                logger.lifecycle getStatusMessage(it)
+                strb.append("│ " + getStatusMessage(it)).append("\n")
             }
-            logger.lifecycle('...')
+            strb.append("╰─── ◷ waiting for " + (System.currentTimeMillis() - startTime) / 1000 + "s\n")
+
+            printNonRepeatingLogs(strb.toString())
 
             someHealthChecksFailed = haveSomeHealthChecksFailed(healthChecks)
             allHealthChecksOk = areAllHealthChecksOk(healthChecks)
@@ -73,6 +79,26 @@ class ServiceAvailability {
             Thread.sleep(1000)
         }
         allHealthChecksOk
+    }
+
+    private void printNonRepeatingLogs(String statusLog) {
+        if (!availabilityHasBeenLoggedOnce) {
+            logger.lifecycle statusLog
+            availabilityHasBeenLoggedOnce = true
+        } else {
+            int statusLogLines = countLinesInString(statusLog) + 1
+            println '\r\033[' + statusLogLines + 'A\033[0K' + statusLog
+        }
+
+    }
+
+    private int countLinesInString(String statusLog) {
+        def statusLogLines = statusLog.split(System.getProperty("line.separator"))
+        if (statusLogLines.last().empty) {
+            return statusLogLines.length + 1
+        } else {
+            return statusLogLines.length
+        }
     }
 
     private static String getStatusMessage(HealthCheck healthCheck) {
