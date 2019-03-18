@@ -64,11 +64,11 @@ Health check for a fire and forget (configuration) container with an exit code t
 If none of the environment variables is found, the health check will not be performed on that particular service.
 
 #### Timeout
-The timeout after which to fail the startup, can be configured via gradle command line property `-PstartupTimeoutInSeconds=30`
+The timeout after which to fail the startup, can be configured via gradle command line property `-PstartupTimeoutInSeconds=240`
 Or in a build.gradle via:
 ```
 msintplugin {
-  startupTimeoutInSeconds = 30
+  startupTimeoutInSeconds = 240
 }
 ```
 whereas the property overrides the build.gradle configuration.
